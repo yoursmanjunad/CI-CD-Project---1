@@ -44,6 +44,7 @@ To develop a CI/CD pipeline that enhances the software development lifecycle by 
 - **Containerization**: Docker
 - **Code Quality**: SonarQube
 - **Orchestration**: Kubernetes (EKS)
+- **Image Scanning**: Trivy
 - **Infrastructure as Code**: Terraform
 - **Monitoring**: Prometheus, Grafana
 - **Logging**: ELK Stack (Elasticsearch, Logstash, Kibana)
@@ -56,6 +57,7 @@ To develop a CI/CD pipeline that enhances the software development lifecycle by 
 ## Cloud Infrastructure
 
 - **AWS EC2**: For hosting Jenkins and SonarQube.
+- **AWS ECR**: For storing Docker images.
 - **AWS EKS**: For deploying containerized applications.
 - **AWS S3**: For storing Terraform state files and build logs.
 - **AWS Route 53**: For DNS management and failover routing.
@@ -86,18 +88,19 @@ Epic: Project Setup and Planning
 ```mermaid
 graph TD;
   A[Push code to GitHub] --> B[Trigger Jenkins build]
-  B --> C[Analyze code with Sonarqube]
-  C --> D[Run unit and integration tests]
-  D --> E[Build Docker imag]
-  E --> F[Push Docker image to repository]
-  F --> G[Test image locally]
-  G --> H[Deploy to EKS]
-  H --> I[Monitor with Prometheus and Grafana]
-  I --> J[Log with ELK stack]
-  J --> K[Notify via Slack]
-  H --> L[Store logs in S3]
-  K --> M[Backup state files to S3]
-  M --> N[Cross-region replication]
+  B --> C[Build Docker image]
+  C --> D[Scan image with Trivy]
+  D --> E[Run unit and integration tests]
+  E --> F[Analyze code with SonarQube]
+  F --> G[Push Docker image to ECR]
+  G --> H[Test image locally]
+  H --> I[Deploy to EKS]
+  I --> J[Monitor with Prometheus and Grafana]
+  J --> K[Log with ELK stack]
+  K --> L[Notify via Slack]
+  H --> M[Store logs in S3]
+  M --> N[Backup state files to S3]
+  N --> O[Cross-region replication]
 ```
 
 ## Setup Instructions
@@ -119,14 +122,14 @@ graph TD;
 1. **Clone the Repository**:
 
    ```bash
-   git clone
+   git clone https://github.com/your-repo/ci-cd-pipeline.git
    cd ci-cd-pipeline
    ```
 
 2. **Set Up Jenkins**:
 
-   - Install necessary plugins: Git, Docker, SonarQube.
-   - Configure Jenkins credentials for Docker, AWS, and SonarQube.
+   - Install necessary plugins: Git, Docker, SonarQube, Trivy.
+   - Configure Jenkins credentials for Docker, AWS, SonarQube, and Trivy.
    - Create Jenkins pipeline job with stages for building, testing, and deploying the application.
 
 3. **Set Up SonarQube**:
@@ -162,5 +165,3 @@ We welcome contributions to improve this project. Please fork the repository and
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
-
----
